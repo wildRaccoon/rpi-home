@@ -1,0 +1,12 @@
+[Unit]
+Description=Temp Setvice
+After=multi-user.target
+
+[Service]
+Type=simple
+Restart=always
+WorkingDirectory=/home/raccoon/temp-service
+ExecStart=/usr/bin/python3 /home/raccoon/temp-service/temp-service.py
+
+[Install]
+WantedBy=multi-user.target

@@ -1,9 +1,11 @@
 
 python packages:
 
-pip3 install w1thermsensor
-pip3 install adafruit-circuitpython-max31855
-pip3 install Timeloop
-pip3 install falcon
-pip3 install gunicorn
-pip3 install jsonpickle
+sudo pip3 install w1thermsensor adafruit-circuitpython-max31855 Timeloop falcon gunicorn jsonpickle
+
+srv file:
+sudo nano /etc/systemd/system/temp.service <- add file
+sudo systemctl daemon-reload
+sudo systemctl enable temp.service
+sudo systemctl start temp.service
+sudo systemctl stop temp.service
