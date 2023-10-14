@@ -1,0 +1,9 @@
+
+python packages:
+
+pip3 install w1thermsensor
+pip3 install adafruit-circuitpython-max31855
+pip3 install Timeloop
+pip3 install falcon
+pip3 install gunicorn
+pip3 install jsonpickle
