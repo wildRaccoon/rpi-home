@@ -6,6 +6,13 @@ from timeloop import Timeloop
 from datetime import timedelta
 
 
+key_mapping = {
+    "011913a8f76d": "Up:",
+    "011913a78132": "Down:",
+    "011913c47b0c": "Kotel:",
+    "k":"Dim:"
+}
+
 temps = {}
 
 available_sensors = W1ThermSensor.get_available_sensors()
@@ -22,12 +29,12 @@ def read_temp_every_1s():
     i = 1
     for sensor in available_sensors:
         temps[sensor.id] = TempValue(sensor.id, sensor.get_temperature())
-        display.lcd_display_string(str(temps[sensor.id].value)+ "    ", i)
+        display.lcd_display_string(key_mapping[sensor.id] + str(temps[sensor.id].value)+ "    ", i)
         i = i + 1
         
     try:
         temps["k"] = TempValue("k", k_sensor.temperature)
-        display.lcd_display_string(str(temps["k"].value) + "    ", i)
+        display.lcd_display_string(key_mapping["k"] + str(temps["k"].value) + "    ", i)
     except RuntimeError:
         print("Sensor k - error")
 
