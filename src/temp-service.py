@@ -7,9 +7,9 @@ from datetime import timedelta
 
 
 key_mapping = {
-    "011913a8f76d": "Up:",
+    "011913c47b0c": "Up:",
     "011913a78132": "Down:",
-    "011913c47b0c": "Kotel:",
+    "011913a8f76d": "Kotel:",
     "k":"Dim:"
 }
 
