@@ -11,6 +11,16 @@ class SmartSwitch():
         self.device_connected = False
         self.p110 = PyP110.P110(ipAddress, email, password)
 
+        self.connect()
+
+
+    def isConnected(self):
+        return self.device_connected
+
+    def connect(self):
+        if(self.device_connected):
+            return
+
         try:
             log("SmartSwitch: Handshake")
             self.p110.handshake()
@@ -33,8 +43,8 @@ class SmartSwitch():
             log("SmartSwitch: An exception occurred: " + str(error))
             self.device_connected = False
 
-    def isConnected(self):
-        return self.device_connected
+    def state(self):
+        return self.device_on
 
     def getState(self):
         try:
@@ -42,33 +52,40 @@ class SmartSwitch():
             
             self.device_on = deviceInfo["result"]["device_on"]
 
-            log("SmartSwitch: State - " + str(self.device_on))
-
             return self.device_on
             
         except BaseException as error:
             log("SmartSwitch: An exception occurred: " + str(error))
+            self.device_connected = False
         
         return False
 
     def turnOn(self):
+        self.connect()
+
         if (self.device_connected and not self.device_on):
             try:
                 self.p110.turnOn()
                 self.getState()
+                log("SmartSwitch: State - " + str(self.device_on))
             except BaseException as error:
                 log("SmartSwitch: An exception occurred: " + str(error))
+                self.device_connected = False
 
         else:
             log("SmartSwitch: Connected - " + str(self.device_connected))
 
     def turnOff(self):
+        self.connect()
+
         if (self.device_connected and self.device_on):
             try:
                 self.p110.turnOff()
                 self.getState()
+                log("SmartSwitch: State - " + str(self.device_on))
             except BaseException as error:
                 log("SmartSwitch: An exception occurred: " + str(error))
+                self.device_connected = False
 
         else:
             log("SmartSwitch: Connected - " + self.device_connected)
