@@ -31,7 +31,9 @@ def read_temp_every_1s():
     except RuntimeError:
         log("Sensor k - error")
 
-    if smartSwitch.getState():
+    if not smartSwitch.isConnected():
+        state = "disct"
+    elif smartSwitch.getState():
         state = "on"
     else:
         state = "off"
@@ -43,7 +45,7 @@ def read_temp_every_1s():
 
     if(temps.switch() and not smartSwitch.state()):
         smartSwitch.turnOn()
-    elif (smartSwitch.state()):
+    elif (not temps.switch() and smartSwitch.state()):
         smartSwitch.turnOff()
     
 #web api

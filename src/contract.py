@@ -34,8 +34,8 @@ class Sensors():
     
     def switch(self):
         if(self.Up > 76 or self.Smoke > 47):
-            SwithchOn = True
+            self.SwithchOn = True
         else:
-            SwithchOn = False
-        return SwithchOn
+            self.SwithchOn = False
+        return self.SwithchOn
 
