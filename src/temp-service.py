@@ -27,7 +27,7 @@ def read_temp_every_1s():
         temps.set_sensor(str(sensor.id), float(sensor.get_temperature()))
 
     try:
-        temps.set_sensor("k", float(sensor.get_temperature()))
+        temps.set_sensor("k", float(k_sensor.temperature))
     except RuntimeError:
         log("Sensor k - error")
 
