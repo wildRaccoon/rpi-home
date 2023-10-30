@@ -8,5 +8,8 @@ Restart=always
 WorkingDirectory=/home/raccoon/temp-service
 ExecStart=/usr/bin/python3 /home/raccoon/temp-service/temp-service.py
 
+StandardOutput=append:/var/log/temp-service.log
+StandardError=append:/var/log/temp-service.log
+
 [Install]
 WantedBy=multi-user.target
