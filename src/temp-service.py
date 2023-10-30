@@ -38,10 +38,13 @@ def read_temp_every_1s():
     else:
         state = "off"
     
-    display.lcd_display_string(f'Smoke:{temps.Smoke:2.2f} {state}', 1)
-    display.lcd_display_string(f'Stowe:{temps.Stowe:2.2f}', 2)
-    display.lcd_display_string(f'   Up:{temps.Up:2.2f}', 3)
-    display.lcd_display_string(f' Down:{temps.Down:2.2f}', 4)
+    try:
+        display.lcd_display_string(f'Smoke:{temps.Smoke:2.2f} {state}', 1)
+        display.lcd_display_string(f'Stowe:{temps.Stowe:2.2f}', 2)
+        display.lcd_display_string(f'   Up:{temps.Up:2.2f}', 3)
+        display.lcd_display_string(f' Down:{temps.Down:2.2f}', 4)
+    except BaseException as error:
+        log("Unable to write on display: " + str(error))
 
     if(temps.switch() and not smartSwitch.state()):
         smartSwitch.turnOn()
