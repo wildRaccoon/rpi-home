@@ -33,7 +33,7 @@ class Sensors():
             self.SmokeTs = time.time()
     
     def switch(self):
-        if(self.Up > 76 or self.Smoke > 47):
+        if(self.Up > 80 or self.Smoke > 48):
             self.SwithchOn = True
         else:
             self.SwithchOn = False
