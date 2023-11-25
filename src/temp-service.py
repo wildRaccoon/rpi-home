@@ -31,12 +31,15 @@ def read_temp_every_1s():
     except RuntimeError:
         log("Sensor k - error")
 
-    if not smartSwitch.isConnected():
-        state = "disct"
-    elif smartSwitch.getState():
-        state = "on"
-    else:
-        state = "off"
+    try:
+        if not smartSwitch.isConnected():
+            state = "disct"
+        elif smartSwitch.getState():
+            state = "on"
+        else:
+            state = "off"
+    except BaseException as error:
+        log("Unable to write switch status on display: " + str(error))
     
     try:
         display.lcd_display_string(f'Smoke:{temps.Smoke:2.2f} {state}', 1)
@@ -46,10 +49,13 @@ def read_temp_every_1s():
     except BaseException as error:
         log("Unable to write on display: " + str(error))
 
-    if(temps.switch() and not smartSwitch.state()):
-        smartSwitch.turnOn()
-    elif (not temps.switch() and smartSwitch.state()):
-        smartSwitch.turnOff()
+    try:
+        if(temps.switch() and not smartSwitch.state()):
+            smartSwitch.turnOn()
+        elif (not temps.switch() and smartSwitch.state()):
+            smartSwitch.turnOff()
+    except BaseException as error:
+        log("Unable to change switch status: " + str(error))
     
 #web api
 
