@@ -12,3 +12,4 @@ sudo systemctl stop temp.service
 
 status:
 journalctl -u temp.service
+journalctl -n 30 -u temp.service

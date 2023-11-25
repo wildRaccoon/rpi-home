@@ -83,5 +83,8 @@ async def main():
     log('Starting Server....')
     await runner()
 
+    await asyncio.Event().wait()
+
+
 if __name__ == "__main__":
     asyncio.run(main())

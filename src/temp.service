@@ -1,5 +1,5 @@
 [Unit]
-Description=Temp Setvice
+Description=Temp Service
 After=multi-user.target
 
 [Service]
