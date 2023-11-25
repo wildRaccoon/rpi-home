@@ -1,4 +1,6 @@
-from PyP100 import PyP110
+import asyncio
+
+from tapo import ApiClient
 from datetime import datetime
 
 def log(message):
@@ -9,26 +11,21 @@ class SmartSwitch():
     def __init__ (self, ipAddress, email, password):
         self.device_on = False
         self.device_connected = False
-        self.p110 = PyP110.P110(ipAddress, email, password)
-
-        self.connect()
-
+        self.ipAddress = ipAddress
+        self.client = ApiClient(email, password)
 
     def isConnected(self):
         return self.device_connected
 
-    def connect(self):
+    async def connect(self):
         if(self.device_connected):
             return
 
         try:
             log("SmartSwitch: Handshake")
-            self.p110.handshake()
+            self.p110 = await self.client.p110(self.ipAddress)
 
-            log("SmartSwitch: Login")
-            self.p110.login()
-
-            self.getState()
+            await self.getState()
 
             self.device_connected = True
 
@@ -36,8 +33,8 @@ class SmartSwitch():
             log("SmartSwitch: State - " + str(self.device_on))
 
             if(self.device_connected and self.device_on):
-                self.p110.turnOff()
-                self.getState()
+                await self.p110.off()
+                await self.getState()
 
         except BaseException as error:
             log("SmartSwitch: An exception occurred: " + str(error))
@@ -46,11 +43,11 @@ class SmartSwitch():
     def state(self):
         return self.device_on
 
-    def getState(self):
+    async def getState(self):
         try:
-            deviceInfo = self.p110.getDeviceInfo()
+            deviceInfo = await self.p110.get_device_info_json()
             
-            self.device_on = deviceInfo["result"]["device_on"]
+            self.device_on = deviceInfo['device_on']
 
             return self.device_on
             
@@ -60,13 +57,13 @@ class SmartSwitch():
         
         return False
 
-    def turnOn(self):
-        self.connect()
+    async def turnOn(self):
+        await self.connect()
 
         if (self.device_connected and not self.device_on):
             try:
-                self.p110.turnOn()
-                self.getState()
+                await self.p110.on()
+                await self.getState()
                 log("SmartSwitch: State - " + str(self.device_on))
             except BaseException as error:
                 log("SmartSwitch: An exception occurred: " + str(error))
@@ -75,13 +72,13 @@ class SmartSwitch():
         else:
             log("SmartSwitch: Connected - " + str(self.device_connected))
 
-    def turnOff(self):
-        self.connect()
+    async def turnOff(self):
+        await self.connect()
 
         if (self.device_connected and self.device_on):
             try:
-                self.p110.turnOff()
-                self.getState()
+                await self.p110.off()
+                await self.getState()
                 log("SmartSwitch: State - " + str(self.device_on))
             except BaseException as error:
                 log("SmartSwitch: An exception occurred: " + str(error))

@@ -6,7 +6,7 @@ After=multi-user.target
 Type=simple
 Restart=always
 WorkingDirectory=/home/raccoon/temp-service
-ExecStart=/usr/bin/python3 /home/raccoon/temp-service/temp-service.py
+ExecStart=/home/raccoon/temp-service/run.sh
 
 StandardOutput=append:/var/log/temp-service.log
 StandardError=append:/var/log/temp-service.log

@@ -1,7 +1,7 @@
 
 python packages:
 
-sudo pip3 install w1thermsensor adafruit-circuitpython-max31855 Timeloop falcon gunicorn jsonpickle PyP100
+sudo pip3 install w1thermsensor adafruit-circuitpython-max31855 Timeloop falcon gunicorn jsonpickle tapo aiohttp
 
 srv file:
 sudo nano /etc/systemd/system/temp.service <- add file
