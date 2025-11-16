@@ -30,6 +30,24 @@ k_sensor = adafruit_max31855.MAX31855(spi, cs)
 
 state = "off"
 
+async def reconnect_smartswitch_periodically():
+    """Періодично намагається переподключитися до SmartSwitch, якщо підключення не вдалося"""
+    reconnect_interval = 60  # секунди між спробами переподключення
+    
+    while True:
+        await asyncio.sleep(reconnect_interval)
+        
+        if not smartSwitch.isConnected():
+            try:
+                log("SmartSwitch: Спроба автоматичного переподключення...")
+                await smartSwitch.connect()
+                if smartSwitch.isConnected():
+                    log("SmartSwitch: Автоматичне переподключення успішне!")
+                else:
+                    log("SmartSwitch: Автоматичне переподключення не вдалося")
+            except Exception as error:
+                log(f"SmartSwitch: Помилка при автоматичному переподключенні: {error}")
+
 async def read_temp_every_1s():
     while True:
         #log(jsonpickle.encode(temps))
@@ -91,6 +109,7 @@ async def runner():
 async def main():
     log('Run app loop....')
     asyncio.create_task(read_temp_every_1s())
+    asyncio.create_task(reconnect_smartswitch_periodically())
 
     try:
         await smartSwitch.connect()
@@ -98,6 +117,7 @@ async def main():
     except Exception as error:
         log(f"Помилка підключення до SmartSwitch: {error}")
         log("Продовжую роботу без підключення до SmartSwitch...")
+        log("SmartSwitch: Буде виконано автоматичне переподключення кожні 60 секунд")
 
     log('Starting Server....')
     await runner()
