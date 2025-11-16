@@ -7,7 +7,19 @@ from taposwitch import log, SmartSwitch
 from contract import Sensors
 
 temps = Sensors()
-smartSwitch = SmartSwitch(os.getenv("TAPO_IP_ADDRESS"), os.getenv("TAPO_USERNAME"), os.getenv("TAPO_PASSWORD"))
+
+# Перевірка змінних оточення
+tapo_ip = os.getenv("TAPO_IP_ADDRESS")
+tapo_user = os.getenv("TAPO_USERNAME")
+tapo_pass = os.getenv("TAPO_PASSWORD")
+
+if not all([tapo_ip, tapo_user, tapo_pass]):
+    log("Помилка: Не встановлені змінні оточення TAPO_IP_ADDRESS, TAPO_USERNAME або TAPO_PASSWORD")
+    exit(1)
+
+smartSwitch = SmartSwitch(tapo_ip, tapo_user, tapo_pass)
+
+
 
 available_sensors = W1ThermSensor.get_available_sensors()
 display = drivers.Lcd()
@@ -79,6 +91,13 @@ async def runner():
 async def main():
     log('Run app loop....')
     asyncio.create_task(read_temp_every_1s())
+
+    try:
+        await smartSwitch.connect()
+        log("SmartSwitch: State - " + str(smartSwitch.state()))
+    except Exception as error:
+        log(f"Помилка підключення до SmartSwitch: {error}")
+        log("Продовжую роботу без підключення до SmartSwitch...")
 
     log('Starting Server....')
     await runner()
